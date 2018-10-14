@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        {% block head %}
+        {% endblock %}
+    </head>
+
+    <h1>
+        {% block header %}
+        {% endblock %}
+    </h1>
+  
+    <body>
+        {% block content %}
+        {% endblock %}
+   
+        <form class ="logout-link" action="/accounts/logout/" method="post">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+
+    </body>
+</html>

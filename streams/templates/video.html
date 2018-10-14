@@ -1,0 +1,88 @@
+{% extends 'base_layout.html' %}
+
+{%block header%}
+Live Stream
+{% endblock %}
+
+{%block head%}
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+        <!-- Or if you want a more recent canary version -->
+        <!-- <script src="https://cdn.jsdelivr.net/npm/hls.js@canary"></script> -->
+{% endblock %}
+
+
+{%block content%} 
+    <video id="video"></video>
+
+    <br>
+    <br>
+    <br>
+
+    
+    <textarea id="chat-log" cols="100" rows="20"></textarea><br/>
+    <input id="chat-message-input" type="text" size="100"/><br/>
+    <input id="chat-message-submit" type="button" value="Send"/>
+
+    <script>
+        if (Hls.isSupported()) {
+            var video = document.getElementById('video');
+            var hls = new Hls();
+            // bind them together
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MEDIA_ATTACHED, function () {
+                console.log("video and hls.js are now bound together !");
+                hls.loadSource("https://d3tzeyipsqaqam.cloudfront.net/out/v1/493e30cca8744374b171e0aebb46560d/index.m3u8");
+                hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+                    console.log("manifest loaded, found " + data.levels.length + " quality level");
+                });
+            });
+        }
+     // hls.js is not supported on platforms that do not have Media Source Extensions (MSE) enabled.
+     // When the browser has built-in HLS support (check using `canPlayType`), we can provide an HLS manifest (i.e. .m3u8 URL) directly to the video element throught the `src` property.
+     // This is using the built-in support of the plain video element, without using hls.js.
+     // Note: it would be more normal to wait on the 'canplay' event below however on Safari (where you are most likely to find built-in HLS support) the video.src URL must be on the user-driven
+     // white-list before a 'canplay' event will be emitted; the last video event that can be reliably listened-for when the URL is not on the white-list is 'loadedmetadata'.
+        else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = 'https://d3tzeyipsqaqam.cloudfront.net/out/v1/493e30cca8744374b171e0aebb46560d/index.m3u8';
+            video.addEventListener('loadedmetadata',function() {
+            video.play();
+            });
+        }
+
+        var username = "{{user}}";
+
+        var chatSocket = new WebSocket(
+            'ws://' + window.location.host +
+            '/ws/chat/'  + 'testroom' + '/');
+
+        chatSocket.onmessage = function(e) {
+            var data = JSON.parse(e.data);
+            var message = data['message'];
+            document.querySelector('#chat-log').value += (message + '\n');
+        };
+
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        document.querySelector('#chat-message-input').focus();
+        document.querySelector('#chat-message-input').onkeyup = function(e) {
+            if (e.keyCode === 13) {  // enter, return
+                document.querySelector('#chat-message-submit').click();
+            }
+        };
+
+        document.querySelector('#chat-message-submit').onclick = function(e) {
+            var messageInputDom = document.querySelector('#chat-message-input');
+            var message = messageInputDom.value;
+            chatSocket.send(JSON.stringify({
+                'message': username + ': ' + message
+            }));
+
+            messageInputDom.value = '';
+        };
+
+    </script>
+    
+    <p>You are logged in as {{user}}</p>
+{% endblock %}

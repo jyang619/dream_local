@@ -1,0 +1,16 @@
+<h1>Log in</h1>
+<form class="site-form" action="{% url 'accounts:login' %}" method = "post">
+        {% csrf_token %}
+        {{form}}
+        {% if request.GET.next %}
+            <input type="hidden" name = "next" value="{{ request.GET.next}}">
+        {% endif %}
+        <input type ="submit" value="Login">
+ </form>
+
+<p>Don't have an account?</p>
+
+<form class ="logout-link" action="/accounts/signup/" method="get">
+    <button type="submit">Sign Up</button>
+</form>
+
