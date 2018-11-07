@@ -1,0 +1,81 @@
+.bottomright {
+    position: absolute;
+    bottom: 50px;
+    right: 16px;
+}
+
+#video {
+    position: absolute;
+    right: 40%;
+    top: 10%;
+}
+
+.chatLog {
+    border-style: none;
+    background-color: #fff;
+    margin:0 auto;
+    padding:10px;
+    width: 100%;
+    resize: none;
+}
+
+.chatInput {
+    width: 84%;
+    height: 100%;
+}
+
+#chat-message-submit {
+    width: 14%;
+    height: 100%;
+    padding: none;
+    margin: none;
+}
+
+.buttonContainer button {
+    height: 100%;
+    width: 50%;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 10px;
+    background-color: #EBF4FB;
+    transition: 0.3s;
+}
+
+
+.buttonContainer button:hover {  
+    background-color: rgb(82, 146, 196);
+}
+
+.buttonContainer button.active {
+    background-color: rgb(129, 180, 219);
+}
+
+.buttonContainer {
+    width: 100%;
+    height: 50px;
+    border:  1px solid #ACD8F0;
+    border-left: none;
+    border-top: none;
+    border-right: none;
+}
+
+.inputbar {
+    width: 100%;
+    border:1px solid #ACD8F0;
+    padding: 4px;
+    margin: none;
+    border-bottom: none;
+    border-right: none;
+    border-left: none;
+}
+
+#wrapper {
+    position: absolute;
+    right: 10%;
+    top: 10%;
+    margin:0 auto;
+    background-color:#EBF4FB;
+    width:400px;
+    border:1px solid #ACD8F0; }

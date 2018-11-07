@@ -5,6 +5,9 @@ Live Stream
 {% endblock %}
 
 {%block head%}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'streams/streams_class_style.css' %}">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
         <!-- Or if you want a more recent canary version -->
         <!-- <script src="https://cdn.jsdelivr.net/npm/hls.js@canary"></script> -->
@@ -12,16 +15,27 @@ Live Stream
 
 
 {%block content%} 
-    <video id="video"></video>
+    <video id="video" width="1024" height="576" controls="controls"></video>
 
     <br>
     <br>
     <br>
+    <div id="wrapper">
+        <div id="tabs" class="buttonContainer">
+            <button class="button active" onclick="selectedTab(event, 'chat-log')">Chat Room</button>
+            <button class="button" onclick="selectedTab(event, 'question-tab')">Q/A</button>
+        </div>
+        
+        <textarea id="chat-log" cols="50" rows="21" class ="tabcontent chatLog" style="display:block" readonly></textarea>
+        <div id ="question-tab" class ="tabcontent" style="display:none">
+            <p>Test</p>    
+        </div>
 
-    
-    <textarea id="chat-log" cols="100" rows="20"></textarea><br/>
-    <input id="chat-message-input" type="text" size="100"/><br/>
-    <input id="chat-message-submit" type="button" value="Send"/>
+        <div class="inputbar">
+            <input id="chat-message-input" class = "chatInput" type="text"/>
+            <input id="chat-message-submit" type="button" value="Send"/>
+        </div>
+    </div>
 
     <script>
         if (Hls.isSupported()) {
@@ -31,7 +45,7 @@ Live Stream
             hls.attachMedia(video);
             hls.on(Hls.Events.MEDIA_ATTACHED, function () {
                 console.log("video and hls.js are now bound together !");
-                hls.loadSource("https://d3tzeyipsqaqam.cloudfront.net/out/v1/493e30cca8744374b171e0aebb46560d/index.m3u8");
+                hls.loadSource("https://d3osdwyocscd12.cloudfront.net/out/v1/b76e56b38f134388813b00d36ac6abde/index.m3u8");
                 hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
                     console.log("manifest loaded, found " + data.levels.length + " quality level");
                 });
@@ -82,7 +96,26 @@ Live Stream
             messageInputDom.value = '';
         };
 
+        function selectedTab(e, tabSection) {
+            var i, tabcontent, tab;
+
+            //initially hide all tab content
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+           
+            //initially remove highlights on all tabs
+            tabs = document.getElementById("tabs").getElementsByClassName("button");
+            for (i = 0; i < tabs.length; i++) {
+                tabs[i].className = tabs[i].className.replace(" active", "");
+            }
+
+            //highlight selected tab and show tab content
+            document.getElementById(tabSection).style.display = "block";  
+            e.currentTarget.className += " active";
+        }
     </script>
     
-    <p>You are logged in as {{user}}</p>
+    <p align="right" class="bottomright">You are logged in as {{user}}</p>
 {% endblock %}
