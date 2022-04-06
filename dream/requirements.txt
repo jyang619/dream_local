@@ -43,7 +43,7 @@ semantic-version==2.5.0
 six==1.11.0
 termcolor==1.1.0
 texttable==0.9.1
-Twisted==18.7.0
+Twisted==21.2.0
 txaio==18.8.1
 urllib3==1.22
 wcwidth==0.1.7
